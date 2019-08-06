@@ -1,6 +1,8 @@
 mod interpreter;
 
 extern crate clap;
+use std::io::Read;
+use std::fs::File;
 
 fn main()
 {
@@ -35,10 +37,17 @@ fn main()
     let program: Vec<u8> = match matches.value_of("inputfile")
     {
         // read from file
-        Some(filename) => Vec::new(),
+        Some(filename) =>
+        {
+            let mut file = File::open(filename).expect("Unable to open file");
+            let mut contents = String::new();
+            file.read_to_string(&mut contents).expect("Unable to read file");
+            contents.as_bytes().iter().map(|&x| x as u8).collect()
+        }
 
         // read from argument
-        None => matches.value_of("program").unwrap().as_bytes().iter().map(|&x| x as u8).collect(),
+        None => matches.value_of("program").unwrap().as_bytes().
+                    iter().map(|&x| x as u8).collect(),
     };
 
     // get tape size
