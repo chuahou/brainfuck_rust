@@ -87,7 +87,7 @@ pub fn interpret(program: Vec<u8>, tape_size: usize)
             }
 
             // comment
-            _ => println!("..."),
+            _ => (),
         }
 
         // go to next character
