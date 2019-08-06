@@ -1,9 +1,10 @@
 use std::io::Read;
+use std::num::Wrapping;
 
 pub fn interpret(program: Vec<u8>, tape_size: usize)
 {
     // create tape and pointers
-    let mut tape = vec![0u8; tape_size];
+    let mut tape = vec![Wrapping(0u8); tape_size];
     let mut tape_ptr: usize = 0;
     let mut program_ptr: usize = 0;
 
@@ -13,10 +14,10 @@ pub fn interpret(program: Vec<u8>, tape_size: usize)
         match program[program_ptr]
         {
             // increment data cell
-            b'+' => tape[tape_ptr] += 1,
+            b'+' => tape[tape_ptr] += Wrapping(1),
 
             // decrement data cell
-            b'-' => tape[tape_ptr] -= 1,
+            b'-' => tape[tape_ptr] -= Wrapping(1),
 
             // increment tape pointer
             b'>' =>
@@ -45,17 +46,17 @@ pub fn interpret(program: Vec<u8>, tape_size: usize)
             }
 
             // print current data
-            b'.' => print!("{}", tape[tape_ptr] as char),
+            b'.' => match tape[tape_ptr] { Wrapping(c) => print!("{}", c as char) },
 
             // input character to current position on data
             b',' => tape[tape_ptr] =
-                std::io::stdin().bytes().next().unwrap().unwrap(),
+                Wrapping(std::io::stdin().bytes().next().unwrap().unwrap() as u8),
 
             // handle [
             b'[' =>
             {
                 // jump to ]
-                if tape[tape_ptr] == 0
+                if tape[tape_ptr] == Wrapping(0)
                 {
                     // count represents the number of excess [ we've encountered
                     // minus the number of ] encountered
@@ -77,7 +78,7 @@ pub fn interpret(program: Vec<u8>, tape_size: usize)
             b']' =>
             {
                 // jump to the matching [ if not zero
-                if tape[tape_ptr] != 0
+                if tape[tape_ptr] != Wrapping(0)
                 {
                     // count represents the number of excess ] we've encountered
                     // minus the number of [ encountered
