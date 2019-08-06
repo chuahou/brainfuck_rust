@@ -4,7 +4,13 @@ fn main()
 {
     // get configuration
     let tape_size: usize = 30000;
-    let program = b"++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
+    let helloworld = b"++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
+    let mut program: Vec<u8> = Vec::new();
+    for byte in helloworld.iter()
+    {
+        program.push(*byte);
+    }
+    let program = program;
 
     // create tape and pointers
     let mut tape = vec![0u8; tape_size];
