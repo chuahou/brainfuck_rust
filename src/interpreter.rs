@@ -57,9 +57,18 @@ pub fn interpret(program: Vec<u8>, tape_size: usize)
                 // jump to ]
                 if tape[tape_ptr] == 0
                 {
-                    while program[program_ptr] != b']'
+                    // count represents the number of excess [ we've encountered
+                    // minus the number of ] encountered
+                    let mut count = 1;
+                    while count > 0
                     {
                         program_ptr += 1;
+                        match program[program_ptr]
+                        {
+                            b']' => count -= 1,
+                            b'[' => count += 1,
+                            _ => (),
+                        }
                     }
                 }
             }
