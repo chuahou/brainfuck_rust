@@ -47,10 +47,7 @@ fn main()
     };
 
     let helloworld = b"++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
-    for byte in helloworld.iter()
-    {
-        program.push(*byte);
-    }
+    let program: Vec<u8> = helloworld.iter().map(|&x| x as u8).collect::<Vec<u8>>();
     let program = program;
 
     // interpret program
