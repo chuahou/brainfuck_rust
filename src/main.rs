@@ -9,9 +9,12 @@ fn main()
                     .version(clap::crate_version!())
                     .author(clap::crate_authors!())
                     .about("Yet yet another brainfuck interpreter, now in Rust")
-                    .arg(clap::Arg::with_name("PROGRAM")
+                    .arg(clap::Arg::with_name("program")
+                        .short("p")
+                        .long("program")
+                        .value_name("PROGRAM")
                         .help("Body of program to interpret")
-                        .index(1))
+                        .takes_value(true))
                     .arg(clap::Arg::with_name("inputfile")
                         .short("f")
                         .long("file")
@@ -19,7 +22,7 @@ fn main()
                         .help("Reads program from file")
                         .takes_value(true))
                     .group(clap::ArgGroup::with_name("input").required(true)
-                        .args(&["PROGRAM", "inputfile"]))
+                        .args(&["program", "inputfile"]))
                     .arg(clap::Arg::with_name("tapesize")
                         .short("t")
                         .long("tapesize")
@@ -35,7 +38,7 @@ fn main()
         Some(filename) => Vec::new(),
 
         // read from argument
-        None => matches.value_of("PROGRAM").unwrap().as_bytes().iter().map(|&x| x as u8).collect(),
+        None => matches.value_of("program").unwrap().as_bytes().iter().map(|&x| x as u8).collect(),
     };
 
     // get tape size
