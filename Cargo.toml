@@ -1,6 +1,6 @@
 [package]
 name = "brainfuck_rust"
-version = "0.0.1"
+version = "1.0.0"
 authors = ["Chua Hou <human@chuahou.dev>"]
 edition = "2018"
 
