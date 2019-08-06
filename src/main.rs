@@ -29,15 +29,14 @@ fn main()
                     .get_matches();
 
     // read program from file or from arguments
-    let mut program: Vec<u8> = Vec::new();
-    match matches.value_of("inputfile")
+    let program: Vec<u8> = match matches.value_of("inputfile")
     {
         // read from file
-        Some(filename) => (),
+        Some(filename) => Vec::new(),
 
         // read from argument
-        None => (),
-    }
+        None => matches.value_of("PROGRAM").unwrap().as_bytes().iter().map(|&x| x as u8).collect(),
+    };
 
     // get tape size
     let tape_size: usize = match matches.value_of("tapesize")
@@ -45,10 +44,6 @@ fn main()
         Some(tape_size) => tape_size.parse::<usize>().unwrap(),
         None => 30000,
     };
-
-    let helloworld = b"++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
-    let program: Vec<u8> = helloworld.iter().map(|&x| x as u8).collect::<Vec<u8>>();
-    let program = program;
 
     // interpret program
     interpreter::interpret(program, tape_size);
