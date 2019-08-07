@@ -3,10 +3,10 @@ use std::num::Wrapping;
 #[derive(Debug)]
 pub struct BrainfuckState
 {
-    pub tape: Vec<Wrapping<u8>>,
-    pub tape_ptr: usize,
-    pub program: Vec<u8>,
-    pub program_ptr: usize,
+    tape: Vec<Wrapping<u8>>,
+    tape_ptr: usize,
+    program: Vec<u8>,
+    program_ptr: usize,
 }
 
 impl BrainfuckState
