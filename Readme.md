@@ -29,7 +29,7 @@ To read a brainfuck program from a file, run
 Alternatively, you can read a program directly from the command line arguments using
 
     [BINARY] --program <PROGRAM>
-    [BINRAY] --program ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++. # example
+    [BINARY] --program ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++. # example
 
 For more information, run
 
