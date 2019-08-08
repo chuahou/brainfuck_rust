@@ -126,39 +126,54 @@ mod tests
 {
     use super::*;
 
-    fn construct_bf_state() -> BrainfuckState
-    {
-        BrainfuckState::new("++++++++[->+++++++++<]", 30000)
-    }
-
     #[test]
     fn test_construct_bf_state()
     {
-        let bfstate = construct_bf_state();
+        let mut bfstate = BrainfuckState::new("++++++++[->+++++++++<]", 30000);
         assert_eq!(bfstate.tape.len(), 30000, "Testing tape size");
         assert_eq!(bfstate.tape_ptr, 0, "Testing tape pointer set to 0");
         assert_eq!(bfstate.program, vec!(b'+', b'+', b'+', b'+', b'+', b'+',
             b'+', b'+', b'[', b'-', b'>', b'+', b'+', b'+', b'+', b'+', b'+',
             b'+', b'+', b'+', b'<', b']'), "Testing program converted to Vec<u8>");
         assert_eq!(bfstate.program_ptr, 0, "Testing program pointer set to 0");
+
+        // check no panic
+        bfstate.interpret();
     }
 
     #[test]
     fn test_overflow()
     {
-        let mut bfstate = construct_bf_state();
+        let mut bfstate = BrainfuckState::new("-", 1);
         bfstate.tape[0] = Wrapping(0);
-        bfstate.tape[0] -= Wrapping(1);
+        bfstate.interpret();
         assert_eq!(bfstate.tape[0], Wrapping(255), "Testing underflow");
-        bfstate.tape[0] += Wrapping(1);
+
+        // change program to increment
+        bfstate.program = vec!(b'+');
+        bfstate.program_ptr = 0;
+        bfstate.interpret();
         assert_eq!(bfstate.tape[0], Wrapping(0), "Testing overflow");
     }
 
     #[test]
     #[should_panic]
-    fn test_program_ptr_out_of_bounds()
+    fn test_program_ptr_out_of_bounds_left()
     {
-        let mut bfstate = construct_bf_state();
-        bfstate.program_ptr -= 1;
+        let mut bfstate = BrainfuckState::new("<", 100);
+        bfstate.interpret();
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_program_ptr_out_of_bounds_right()
+    {
+        let mut program = String::new();
+        for _ in 1..101
+        {
+            program.push('>');
+        }
+        let mut bfstate = BrainfuckState::new(&program, 100);
+        bfstate.interpret();
     }
 }
