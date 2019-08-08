@@ -6,3 +6,29 @@ Yet another brainfuck interpreter (this time in Rust), because I'm bored and wan
 projects. Once again, this badge says it best:
 
 [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
+
+## Usage
+
+To build using Cargo, run
+
+    cargo build
+
+To run using Cargo, use
+
+    cargo run -- <arguments>
+
+or directly call the binary with
+
+    bin/brainfuck_rust <arguments>
+
+To read a brainfuck program from a file, run
+
+    [BINARY] --file <INPUT FILE>
+
+Alternatively, you can read a program directly from the command line arguments using
+
+    [BINARY] --program <PROGRAM>
+
+For more information, run
+
+    [BINARY] --help
