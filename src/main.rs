@@ -1,8 +1,10 @@
-mod interpreter;
+mod state;
 
 extern crate clap;
 use std::io::Read;
 use std::fs::File;
+
+const DEFAULT_TAPE_SIZE: usize = 30000;
 
 fn main()
 {
@@ -34,7 +36,7 @@ fn main()
                     .get_matches();
 
     // read program from file or from arguments
-    let program: Vec<u8> = match matches.value_of("inputfile")
+    let program: String = match matches.value_of("inputfile")
     {
         // read from file
         Some(filename) =>
@@ -42,21 +44,23 @@ fn main()
             let mut file = File::open(filename).expect("Unable to open file");
             let mut contents = String::new();
             file.read_to_string(&mut contents).expect("Unable to read file");
-            contents.as_bytes().iter().map(|&x| x as u8).collect()
+            contents
         }
 
         // read from argument
-        None => matches.value_of("program").unwrap().as_bytes().
-                    iter().map(|&x| x as u8).collect(),
+        None => String::from(matches.value_of("program").unwrap()),
     };
 
     // get tape size
     let tape_size: usize = match matches.value_of("tapesize")
     {
         Some(tape_size) => tape_size.parse::<usize>().unwrap(),
-        None => 30000,
+        None => DEFAULT_TAPE_SIZE,
     };
 
+    // create brainfuck state
+    let mut bfstate = state::BrainfuckState::new(&program, tape_size);
+
     // interpret program
-    interpreter::interpret(program, tape_size);
+    bfstate.interpret();
 }

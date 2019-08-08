@@ -1,3 +1,4 @@
+use std::io::Read;
 use std::num::Wrapping;
 
 #[derive(Debug)]
@@ -19,6 +20,104 @@ impl BrainfuckState
         let program_ptr = 0;
 
         BrainfuckState{ tape, tape_ptr, program, program_ptr }
+    }
+
+    pub fn interpret(&mut self)
+    {
+        while self.program_ptr < self.program.len()
+        {
+            match self.program[self.program_ptr]
+            {
+                // increment data cell
+                b'+' => self.tape[self.tape_ptr] += Wrapping(1),
+
+                // decrement data cell
+                b'-' => self.tape[self.tape_ptr] -= Wrapping(1),
+
+                // increment self.tape pointer
+                b'>' =>
+                {
+                    if self.tape_ptr < self.tape.len() - 1
+                    {
+                        self.tape_ptr += 1;
+                    }
+                    else
+                    {
+                        panic!("Exceeded self.tape size");
+                    }
+                }
+
+                // decrement self.tape pointer
+                b'<' =>
+                {
+                    if self.tape_ptr > 0
+                    {
+                        self.tape_ptr -= 1;
+                    }
+                    else
+                    {
+                        panic!("Tape pointer moved left of 0");
+                    }
+                }
+
+                // print current data
+                b'.' => match self.tape[self.tape_ptr] { Wrapping(c) => print!("{}", c as char) },
+
+                // input character to current position on data
+                b',' => self.tape[self.tape_ptr] =
+                    Wrapping(std::io::stdin().bytes().next().unwrap().unwrap() as u8),
+
+                // handle [
+                b'[' =>
+                {
+                    // jump to ]
+                    if self.tape[self.tape_ptr] == Wrapping(0)
+                    {
+                        // count represents the number of excess [ we've encountered
+                        // minus the number of ] encountered
+                        let mut count = 1;
+                        while count > 0
+                        {
+                            self.program_ptr += 1;
+                            match self.program[self.program_ptr]
+                            {
+                                b']' => count -= 1,
+                                b'[' => count += 1,
+                                _ => (),
+                            }
+                        }
+                    }
+                }
+
+                // handle ]
+                b']' =>
+                {
+                    // jump to the matching [ if not zero
+                    if self.tape[self.tape_ptr] != Wrapping(0)
+                    {
+                        // count represents the number of excess ] we've encountered
+                        // minus the number of [ encountered
+                        let mut count = 1;
+                        while count > 0
+                        {
+                            self.program_ptr -= 1;
+                            match self.program[self.program_ptr] 
+                            {
+                                b'[' => count -= 1,
+                                b']' => count += 1,
+                                _ => (),
+                            }
+                        }
+                    }
+                }
+
+                // comment
+                _ => (),
+            }
+
+            // go to next character
+            self.program_ptr += 1;
+        }
     }
 }
 
