@@ -24,10 +24,12 @@ or directly call the binary with
 To read a brainfuck program from a file, run
 
     [BINARY] --file <INPUT FILE>
+    [BINARY] --file helloworld.b # example
 
 Alternatively, you can read a program directly from the command line arguments using
 
     [BINARY] --program <PROGRAM>
+    [BINRAY] --program ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++. # example
 
 For more information, run
 
